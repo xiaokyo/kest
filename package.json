@@ -1,6 +1,6 @@
 {
   "name": "kest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "\"# KEST\"",
   "main": "./lib/src/index.js",
   "files": [

@@ -1,23 +1,23 @@
 import express from "express";
 import webpack from "webpack";
-import { existsSync } from 'fs'
-import { resolve as rsv } from 'path'
+import { existsSync } from "fs";
+import { resolve as rsv } from "path";
 import { success, error as logError, warning } from "./chalk";
 
 // webpack configs
-import { config as webpackConfig } from './webpack/client'
-import { config as serverWebpackConfig } from './webpack/server'
-import { config as dllWebpackConfig } from './webpack/dll'
+import { config as webpackConfig } from "./webpack/client";
+import { config as serverWebpackConfig } from "./webpack/server";
+import { config as dllWebpackConfig } from "./webpack/dll";
 
 const WriteFileWebpackPlugin = require("write-file-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const nodemon = require("nodemon");
 
-const cwd = process.cwd()
+const cwd = process.cwd();
 
 const app = express();
 
-const compilerPromise = (compiler: webpack.Compiler, name: string = '') => {
+const compilerPromise = (compiler: webpack.Compiler, name: string = "") => {
   return new Promise((resolve, reject) => {
     // console.log(compiler)
     compiler.hooks.done.tap("MyPlugin", (stats: webpack.Stats) => {
@@ -36,11 +36,11 @@ const compilerPromise = (compiler: webpack.Compiler, name: string = '') => {
 const compilerRunPromise = (compiler: webpack.Compiler) => {
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
-      if (err) return reject(err)
-      return resolve('build success =-=')
-    })
-  })
-}
+      if (err) return reject(err);
+      return resolve("build success =-=");
+    });
+  });
+};
 
 export const start = async () => {
   const isDev = process.env.NODE_ENV === "development" ? true : false;
@@ -51,17 +51,21 @@ export const start = async () => {
     webpackConfig?.plugins?.push(new FriendlyErrorsWebpackPlugin());
   }
 
-  const compiler = webpack([webpackConfig, serverWebpackConfig, dllWebpackConfig]);
+  const compiler = webpack([
+    webpackConfig,
+    serverWebpackConfig,
+    dllWebpackConfig,
+  ]);
   const clientCompiler = compiler.compilers[0];
   const serverCompiler = compiler.compilers[1];
   const dllCompiler = compiler.compilers[2];
 
   if (!existsSync(`${cwd}/dist/assets/vendor.dll.js`)) {
-    const dllRun = await compilerRunPromise(dllCompiler).catch(err => {
-      logError(err)
-      process.exit(0)
-    })
-    success(dllRun)
+    const dllRun = await compilerRunPromise(dllCompiler).catch((err) => {
+      logError(err);
+      process.exit(0);
+    });
+    success(dllRun);
   }
 
   app.use(
@@ -90,24 +94,24 @@ export const start = async () => {
 
       if (error) {
         logError(error);
-        process.exit(0)
+        process.exit(0);
       }
     }
   );
 
-  await compilerPromise(serverCompiler, 'server').catch(err => {
-    logError(err)
-    process.exit(0)
+  await compilerPromise(serverCompiler, "server").catch((err) => {
+    logError(err);
+    process.exit(0);
   });
 
-  await compilerPromise(clientCompiler, 'client').catch(err => {
-    logError(err)
-    process.exit(0)
+  await compilerPromise(clientCompiler, "client").catch((err) => {
+    logError(err);
+    process.exit(0);
   });
 
   const script = nodemon({
     script: rsv(cwd, "dist/server/server.js"),
-    ignore: ['src', 'scripts', 'config', './*.*', 'dist/assets']
+    ignore: ["src", "scripts", "config", "./*.*", "dist/assets"],
   });
 
   script.on("restart", () => {

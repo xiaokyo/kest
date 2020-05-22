@@ -3,7 +3,7 @@ import common from "./common";
 import { resolve } from "path";
 import webpack from "webpack";
 
-const cwd = process.cwd()
+const cwd = process.cwd();
 
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const devMode = process.env.NODE_ENV === "development" ? true : false;
@@ -20,7 +20,7 @@ for (const key of Object.keys(common.alias)) {
 }
 
 export const config: webpack.Configuration = {
-  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+  mode: process.env.NODE_ENV === "development" ? "development" : "production",
   target: "node",
   entry: [resolve(cwd, "src/server/index.js")],
   output: {

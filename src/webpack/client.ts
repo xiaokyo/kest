@@ -1,7 +1,7 @@
 import babelOptions from "../babel.config";
 import common from "./common";
 import { resolve } from "path";
-import webpack from 'webpack'
+import webpack from "webpack";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
@@ -11,7 +11,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
 const devMode = process.env.NODE_ENV === "development" ? true : false;
 
-const cwd = process.cwd() || '.'
+const cwd = process.cwd() || ".";
 
 // alias
 const alias: any = {};
@@ -24,25 +24,27 @@ for (const key of Object.keys(common.alias)) {
 
 const htmlWebpackOptions = devMode
   ? {
-    initmeta: "<title>xiaokyo</title>",
-    initState: "{}",
-    filename: "app.html",
-  }
+      initmeta: "<title>xiaokyo</title>",
+      initState: "{}",
+      filename: "app.html",
+    }
   : {
-    initmeta: "<!--meta-->",
-    initState: "<!--initState-->",
-    filename: "app.html",
-  };
+      initmeta: "<!--meta-->",
+      initState: "<!--initState-->",
+      filename: "app.html",
+    };
 
-
-const app = [resolve(cwd, "src/client/index.js")]
-if (devMode) app.unshift("webpack-hot-middleware/client?path=http://localhost:8079/__hot_update&timeout=2000&overlay=false&reload=true")
+const app = [resolve(cwd, "src/client/index.js")];
+if (devMode)
+  app.unshift(
+    "webpack-hot-middleware/client?path=http://localhost:8079/__hot_update&timeout=2000&overlay=false&reload=true"
+  );
 
 export const config: webpack.Configuration = {
-  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+  mode: process.env.NODE_ENV === "development" ? "development" : "production",
   target: "web",
   entry: {
-    app
+    app,
   },
   output: {
     path: resolve(cwd, "dist/assets"),
@@ -111,11 +113,9 @@ export const config: webpack.Configuration = {
           {
             loader: "postcss-loader",
             options: {
-              ident: 'postcss',
-              plugins: () => [
-                require('postcss-preset-env')()
-              ]
-            }
+              ident: "postcss",
+              plugins: () => [require("postcss-preset-env")()],
+            },
           },
         ],
       },
@@ -164,8 +164,8 @@ export const config: webpack.Configuration = {
       filepath: resolve(cwd, "dist/assets/vendor.dll.js"), // 对应的 dll 文件路径
     }),
     new webpack.DllReferencePlugin({
-      manifest: resolve(cwd, "dist/vendor-manifest.json"),// dll文件引入
-      context: __dirname
+      manifest: resolve(cwd, "dist/vendor-manifest.json"), // dll文件引入
+      context: __dirname,
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
