@@ -1,10 +1,11 @@
 {
   "name": "kest",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "\"# KEST\"",
   "main": "./lib/src/index.js",
   "files": [
-    "lib"
+    "lib",
+    "lib/src"
   ],
   "bin": {
     "kest": "./lib/src/index.js"
