@@ -2,13 +2,12 @@
   "name": "kest",
   "version": "1.0.4",
   "description": "\"# KEST\"",
-  "main": "./lib/src/index.js",
+  "main": "lib/index.js",
   "files": [
-    "lib",
-    "lib/src/*"
+    "lib/**/*"
   ],
   "bin": {
-    "kest": "./lib/src/index.js"
+    "kest": "lib/index.js"
   },
   "scripts": {
     "test": "jest --config jestconfig.json",
@@ -30,9 +29,12 @@
     "url": "https://github.com/xiaokyo/kest/issues"
   },
   "homepage": "https://github.com/xiaokyo/kest",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "kest",
+    "react"
+  ],
+  "author": "xiaokyo<904656778@qq.com>",
+  "license": "MIT",
   "devDependencies": {
     "@types/chalk": "^2.2.0",
     "@types/commander": "^2.12.2",

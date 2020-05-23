@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 import { program } from "commander";
-import { version } from "../package.json";
 import { start as devStart } from "./dev";
 
 program
-  .version(version)
+  .version(require('../package.json').version)
   .command("dev")
   .description("development")
   .action(() => {
