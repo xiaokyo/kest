@@ -43,13 +43,9 @@ const compilerRunPromise = (compiler: webpack.Compiler) => {
 };
 
 export const start = async () => {
-  const isDev = process.env.NODE_ENV === "development" ? true : false;
-
-  if (isDev) {
-    webpackConfig?.plugins?.push(new webpack.HotModuleReplacementPlugin());
-    webpackConfig?.plugins?.push(new WriteFileWebpackPlugin());
-    webpackConfig?.plugins?.push(new FriendlyErrorsWebpackPlugin());
-  }
+  webpackConfig?.plugins?.push(new webpack.HotModuleReplacementPlugin());
+  webpackConfig?.plugins?.push(new WriteFileWebpackPlugin());
+  webpackConfig?.plugins?.push(new FriendlyErrorsWebpackPlugin());
 
   const compiler = webpack([
     webpackConfig,
