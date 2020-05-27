@@ -68,7 +68,7 @@ export const start = async () => {
       publicPath: webpackConfig?.output?.publicPath,
       logLevel: "silent", // 静默日志
       watchOptions: {
-        ignored: ["dist", "node_modules"],
+        ignored: [/dist/, /node_modules/],
       },
     })
   );
@@ -83,7 +83,9 @@ export const start = async () => {
   app.listen(8079);
 
   serverCompiler.watch(
-    { ignored: ["node_modules", "dist"] },
+    {
+      ignored: [/node_modules/, /dist/],
+    },
     (error: any, stats: any) => {
       if (!error && !stats.hasErrors()) {
         success("server build success");
