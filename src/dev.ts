@@ -18,7 +18,6 @@ const app = express();
 
 const compilerPromise = (compiler: webpack.Compiler) => {
   return new Promise((resolve, reject) => {
-    // console.log(compiler)
     compiler.hooks.done.tap("MyPlugin", (stats: webpack.Stats) => {
       if (!stats.hasErrors()) {
         return resolve();
@@ -36,7 +35,7 @@ const compilerRunPromise = (compiler: webpack.Compiler) => {
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       if (err) return reject(err);
-      return resolve();
+      resolve();
     });
   });
 };
@@ -55,12 +54,14 @@ export const start = async () => {
   const serverCompiler = compiler.compilers[1];
   const dllCompiler = compiler.compilers[2];
 
-  if (!existsSync(`${cwd}/dist/assets/vendor.dll.js`)) {
-    const dllRun = await compilerRunPromise(dllCompiler).catch((err) => {
-      logError(err);
+  if (!existsSync(`${cwd}/dist/dll/vendor.dll.js`)) {
+    try {
+      await compilerRunPromise(dllCompiler);
+      success("Dll build");
+    } catch (e) {
+      logError(e);
       process.exit(0);
-    });
-    success(dllRun);
+    }
   }
 
   app.use(
@@ -83,12 +84,10 @@ export const start = async () => {
   app.listen(8079);
 
   serverCompiler.watch(
-    {
-      ignored: [/node_modules/, /dist/],
-    },
+    { ignored: [/node_modules/, /dist/] },
     (error: any, stats: any) => {
       if (!error && !stats.hasErrors()) {
-        success("server build success");
+        success("Server build");
         return;
       }
 
@@ -99,8 +98,8 @@ export const start = async () => {
     }
   );
 
-  await compilerPromise(clientCompiler);
   await compilerPromise(serverCompiler);
+  await compilerPromise(clientCompiler);
 
   const script = nodemon({
     script: rsv(cwd, "dist/server/server.js"),

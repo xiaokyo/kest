@@ -162,10 +162,10 @@ export const config: webpack.Configuration = {
       template: resolve(cwd, "public/index.kade"),
     }),
     new AddAssetHtmlWebpackPlugin({
-      filepath: resolve(cwd, "dist/assets/vendor.dll.js"), // 对应的 dll 文件路径
+      filepath: resolve(cwd, "dist/dll/vendor.dll.js"), // 对应的 dll 文件路径
     }),
     new webpack.DllReferencePlugin({
-      manifest: resolve(cwd, "dist/vendor-manifest.json"), // dll文件引入
+      manifest: resolve(cwd, "dist/dll/vendor-manifest.json"), // dll文件引入
       context: __dirname,
     }),
     new CleanWebpackPlugin(),
@@ -176,5 +176,4 @@ export const config: webpack.Configuration = {
     new OptimizeCssAssetsPlugin(),
     // new BundleAnalyzerPlugin(),
   ],
-  // devServer: devServer,
 };

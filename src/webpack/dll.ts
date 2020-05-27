@@ -9,7 +9,7 @@ export const config: webpack.Configuration = {
     vendor: ["react", "react-dom"],
   },
   output: {
-    path: resolve(cwd, "dist/assets"),
+    path: resolve(cwd, "dist/dll"),
     filename: "[name].dll.js",
     library: "[name]_[hash]",
     libraryTarget: "this",
@@ -17,7 +17,7 @@ export const config: webpack.Configuration = {
   plugins: [
     new webpack.DllPlugin({
       context: process.cwd(),
-      path: resolve(cwd, "dist/[name]-manifest.json"),
+      path: resolve(cwd, "dist/dll/[name]-manifest.json"),
       name: "[name]_[hash]",
     }),
   ],
