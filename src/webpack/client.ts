@@ -25,15 +25,15 @@ for (const key of Object.keys(common.alias)) {
 
 const htmlWebpackOptions = devMode
   ? {
-    initmeta: "<title>xiaokyo</title>",
-    initState: "{}",
-    filename: "app.html",
-  }
+      initmeta: "<title>xiaokyo</title>",
+      initState: "{}",
+      filename: "app.html",
+    }
   : {
-    initmeta: "<!--meta-->",
-    initState: "<!--initState-->",
-    filename: "app.html",
-  };
+      initmeta: "<!--meta-->",
+      initState: "<!--initState-->",
+      filename: "app.html",
+    };
 
 const app = [resolve(cwd, "src/client/index.js")];
 if (devMode)

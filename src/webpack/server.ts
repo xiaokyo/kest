@@ -2,8 +2,8 @@ import babelOptions from "../babel.config";
 import common from "./common";
 import { resolve } from "path";
 import webpack from "webpack";
-import { CleanWebpackPlugin } from 'clean-webpack-plugin'
-import nodeExternals from 'webpack-node-externals'
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import nodeExternals from "webpack-node-externals";
 
 const cwd = process.cwd();
 const devMode = process.env.NODE_ENV === "development" ? true : false;

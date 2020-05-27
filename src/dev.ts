@@ -7,7 +7,6 @@ import WriteFileWebpackPlugin from "write-file-webpack-plugin";
 import FriendlyErrorsWebpackPlugin from "friendly-errors-webpack-plugin";
 import nodemon from "nodemon";
 
-
 // webpack configs
 import { config as webpackConfig } from "./webpack/client";
 import { config as serverWebpackConfig } from "./webpack/server";
@@ -57,11 +56,10 @@ export const start = async () => {
   const dllCompiler = compiler.compilers[2];
 
   if (!existsSync(`${cwd}/dist/assets/vendor.dll.js`)) {
-    const dllRun = await compilerRunPromise(dllCompiler)
-      .catch((err) => {
-        logError(err);
-        process.exit(0);
-      });
+    const dllRun = await compilerRunPromise(dllCompiler).catch((err) => {
+      logError(err);
+      process.exit(0);
+    });
     success(dllRun);
   }
 
@@ -70,8 +68,8 @@ export const start = async () => {
       publicPath: webpackConfig?.output?.publicPath,
       logLevel: "silent", // 静默日志
       watchOptions: {
-        ignored: ['dist', 'node_modules']
-      }
+        ignored: ["dist", "node_modules"],
+      },
     })
   );
 
@@ -85,7 +83,7 @@ export const start = async () => {
   app.listen(8079);
 
   serverCompiler.watch(
-    { ignored: ['node_modules', 'dist'] },
+    { ignored: ["node_modules", "dist"] },
     (error: any, stats: any) => {
       if (!error && !stats.hasErrors()) {
         success("server build success");
@@ -99,8 +97,8 @@ export const start = async () => {
     }
   );
 
-  await compilerPromise(clientCompiler)
-  await compilerPromise(serverCompiler)
+  await compilerPromise(clientCompiler);
+  await compilerPromise(serverCompiler);
 
   const script = nodemon({
     script: rsv(cwd, "dist/server/server.js"),
