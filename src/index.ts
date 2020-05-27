@@ -7,6 +7,7 @@ program
   .command("dev")
   .description("development")
   .action(() => {
+    console.log(require("../package.json").version)
     devStart();
   });
 

@@ -2,13 +2,11 @@ import babelOptions from "../babel.config";
 import common from "./common";
 import { resolve } from "path";
 import webpack from "webpack";
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import nodeExternals from 'webpack-node-externals'
 
 const cwd = process.cwd();
-
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const devMode = process.env.NODE_ENV === "development" ? true : false;
-
-const nodeExternals = require("webpack-node-externals");
 
 // alias
 const alias: any = {};
@@ -20,7 +18,7 @@ for (const key of Object.keys(common.alias)) {
 }
 
 export const config: webpack.Configuration = {
-  mode: process.env.NODE_ENV === "development" ? "development" : "production",
+  mode: devMode ? "development" : "production",
   target: "node",
   entry: [resolve(cwd, "src/server/index.js")],
   output: {

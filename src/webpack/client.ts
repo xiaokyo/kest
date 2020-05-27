@@ -2,13 +2,14 @@ import babelOptions from "../babel.config";
 import common from "./common";
 import { resolve } from "path";
 import webpack from "webpack";
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import AddAssetHtmlWebpackPlugin from "add-asset-html-webpack-plugin";
+
 const devMode = process.env.NODE_ENV === "development" ? true : false;
 
 const cwd = process.cwd() || ".";
@@ -24,15 +25,15 @@ for (const key of Object.keys(common.alias)) {
 
 const htmlWebpackOptions = devMode
   ? {
-      initmeta: "<title>xiaokyo</title>",
-      initState: "{}",
-      filename: "app.html",
-    }
+    initmeta: "<title>xiaokyo</title>",
+    initState: "{}",
+    filename: "app.html",
+  }
   : {
-      initmeta: "<!--meta-->",
-      initState: "<!--initState-->",
-      filename: "app.html",
-    };
+    initmeta: "<!--meta-->",
+    initState: "<!--initState-->",
+    filename: "app.html",
+  };
 
 const app = [resolve(cwd, "src/client/index.js")];
 if (devMode)
@@ -41,7 +42,7 @@ if (devMode)
   );
 
 export const config: webpack.Configuration = {
-  mode: process.env.NODE_ENV === "development" ? "development" : "production",
+  mode: devMode ? "development" : "production",
   target: "web",
   entry: {
     app,
