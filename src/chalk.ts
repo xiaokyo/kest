@@ -21,12 +21,12 @@ const setArgs = (args: any[], color: Color = "green") =>
   });
 
 export const error = (...args: any[]) =>
-  log(bgRed.black(" ERROR "), ...setArgs(args, "red"));
+  log(bgRed.black("\n ERROR "), ...setArgs(args, "red"));
 
 export const success = (...args: any[]) =>
-  log(bgGreen.black(" DONE "), ...setArgs(args, "green"));
+  log(bgGreen.black("\n DONE "), ...setArgs(args, "green"));
 
 export const warning = (...args: any[]) =>
-  log(bgYellow.black(" WARN "), ...setArgs(args, "yellow"));
+  log(bgYellow.black("\n WARN "), ...setArgs(args, "yellow"));
 
 export { chalk };

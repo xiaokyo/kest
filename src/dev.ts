@@ -27,19 +27,6 @@ const compilerPromise = (compiler: webpack.Compiler) => {
   });
 };
 
-/**
- * webpack's compiler run fun
- * @param compiler webpack compiler
- */
-const compilerRunPromise = (compiler: webpack.Compiler) => {
-  return new Promise((resolve, reject) => {
-    compiler.run((err, stats) => {
-      if (err) return reject(err);
-      resolve();
-    });
-  });
-};
-
 export const start = async () => {
   webpackConfig?.plugins?.push(new webpack.HotModuleReplacementPlugin());
   webpackConfig?.plugins?.push(new WriteFileWebpackPlugin());
@@ -55,36 +42,15 @@ export const start = async () => {
   const dllCompiler = compiler.compilers[2];
 
   if (!existsSync(`${cwd}/dist/dll/vendor.dll.js`)) {
-    try {
-      await compilerRunPromise(dllCompiler);
-      success("Dll build");
-    } catch (e) {
-      logError(e);
-      process.exit(0);
-    }
+    dllCompiler.run((err, stats) => {
+      if (err || stats.hasErrors()) logError(err);
+    });
+    await compilerPromise(dllCompiler).catch((err) => logError(err));
+    success("Dll build");
   }
 
-  app.use(
-    require("webpack-dev-middleware")(clientCompiler, {
-      publicPath: webpackConfig?.output?.publicPath,
-      logLevel: "silent", // 静默日志
-      watchOptions: {
-        ignored: [/dist/, /node_modules/],
-      },
-    })
-  );
-
-  app.use(
-    require("webpack-hot-middleware")(clientCompiler, {
-      path: "/__hot_update",
-      heartbeat: 2000,
-    })
-  );
-
-  app.listen(8079);
-
   serverCompiler.watch(
-    { ignored: [/node_modules/, /dist/] },
+    { ignored: ["dist", "node_modules"] },
     (error: any, stats: any) => {
       if (!error && !stats.hasErrors()) {
         success("Server build");
@@ -98,8 +64,28 @@ export const start = async () => {
     }
   );
 
-  await compilerPromise(serverCompiler);
-  await compilerPromise(clientCompiler);
+  await compilerPromise(serverCompiler).catch((err) => logError(err));
+
+  app.use(
+    require("webpack-dev-middleware")(clientCompiler, {
+      publicPath: webpackConfig?.output?.publicPath,
+      logLevel: "silent", // 静默日志
+      watchOptions: {
+        ignored: ["dist", "node_modules"],
+      },
+    })
+  );
+
+  app.use(
+    require("webpack-hot-middleware")(clientCompiler, {
+      path: "/__hot_update",
+      heartbeat: 2000,
+    })
+  );
+
+  app.listen(8079);
+
+  await compilerPromise(clientCompiler).catch((err) => logError(err));
 
   const script = nodemon({
     script: rsv(cwd, "dist/server/server.js"),
