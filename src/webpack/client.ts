@@ -14,6 +14,10 @@ const devMode = process.env.NODE_ENV === "development" ? true : false;
 
 const cwd = process.cwd() || ".";
 
+// 自定义配置
+const user_config = require(cwd + '/kest.config.js')
+if (!user_config) throw new Error("cann't resolve kest.config.js")
+
 // alias
 const alias: any = {};
 // tslint:disable-next-line: forin
@@ -25,15 +29,15 @@ for (const key of Object.keys(common.alias)) {
 
 const htmlWebpackOptions = devMode
   ? {
-      initmeta: "<title>xiaokyo</title>",
-      initState: "{}",
-      filename: "app.html",
-    }
+    initmeta: "<title>xiaokyo</title>",
+    initState: "{}",
+    filename: "app.html",
+  }
   : {
-      initmeta: "<!--meta-->",
-      initState: "<!--initState-->",
-      filename: "app.html",
-    };
+    initmeta: "<!--meta-->",
+    initState: "<!--initState-->",
+    filename: "app.html",
+  };
 
 const app = [resolve(cwd, "src/client/index.js")];
 if (devMode)
@@ -49,8 +53,8 @@ export const config: webpack.Configuration = {
   },
   output: {
     path: resolve(cwd, "dist/assets"),
-    filename: `${devMode ? "[name].bundle" : "[name].[contenthash:8]"}.js`,
-    publicPath: devMode ? "/" : "//cdn.xiaok.club/",
+    filename: `${devMode ? "[name].bundle" : "[name].[hash:8]"}.js`,
+    publicPath: devMode ? "/" : (user_config.cdnPath ?? '/'),
   },
   resolve: {
     alias,
@@ -127,7 +131,7 @@ export const config: webpack.Configuration = {
             loader: "url-loader",
             options: {
               limit: 8192, // 小于8kg的会进行base64的保存方式导出到js
-              name: `${devMode ? `[name].[ext]` : `[contenthash:8].[ext]`}`,
+              name: `${devMode ? `[name].[ext]` : `[hash:8].[ext]`}`,
             },
           },
         ],
@@ -170,7 +174,7 @@ export const config: webpack.Configuration = {
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: `${devMode ? `[name]` : `[name].[contenthash:8]`}.css`,
+      filename: `${devMode ? `[name]` : `[name].[hash:8]`}.css`,
       ignoreOrder: true, // Enable to remove warnings about conflicting order
     }),
     new OptimizeCssAssetsPlugin(),

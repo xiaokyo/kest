@@ -93,7 +93,7 @@ export const config: webpack.Configuration = {
             loader: "url-loader",
             options: {
               limit: 8192,
-              name: `${devMode ? `[name].[ext]` : `[contenthash:8].[ext]`}`,
+              name: `${devMode ? `[name].[ext]` : `[hash:8].[ext]`}`,
             },
           },
         ],
