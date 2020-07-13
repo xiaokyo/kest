@@ -27,22 +27,32 @@ for (const key of Object.keys(common.alias)) {
   }
 }
 
-const htmlWebpackOptions = devMode
-  ? {
-    initmeta: "<title>xiaokyo</title>",
-    initState: "{}",
-    filename: "app.html",
+const htmlWebpackOptions = {
+  initmeta: "<!--meta-->",
+  initState: "<!--initState-->",
+  filename: "app.html",
+};
+
+/**获取本机IP */
+function getIPAdress() {
+  let interfaces = require('os').networkInterfaces();
+  for (var devName in interfaces) {
+    var iface = interfaces[devName];
+    for (var i = 0; i < iface.length; i++) {
+      let alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        return alias.address
+      }
+    }
   }
-  : {
-    initmeta: "<!--meta-->",
-    initState: "<!--initState-->",
-    filename: "app.html",
-  };
+}
+
+const ip = getIPAdress()
 
 const app = [resolve(cwd, "src/client/index.js")];
 if (devMode)
   app.unshift(
-    "webpack-hot-middleware/client?path=http://localhost:8079/__hot_update&timeout=2000&overlay=false&reload=true"
+    `webpack-hot-middleware/client?path=http://${ip}:8079/__hot_update&timeout=2000&overlay=false&reload=true`
   );
 
 export const config: webpack.Configuration = {
