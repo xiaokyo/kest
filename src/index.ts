@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { program } from "commander";
 import { start as devStart } from "./dev";
-import { start as buildStart } from './build'
+import { start as buildStart } from "./build";
 
 program
   .version(require("../package.json").version)
@@ -14,9 +14,9 @@ program
 
 program
   .command("build")
-  .description('production')
+  .description("production")
   .action(() => {
-    buildStart()
-  })
+    buildStart();
+  });
 
 program.parse(process.argv);

@@ -15,8 +15,8 @@ const devMode = process.env.NODE_ENV === "development" ? true : false;
 const cwd = process.cwd() || ".";
 
 // 自定义配置
-const user_config = require(cwd + '/kest.config.js')
-if (!user_config) throw new Error("cann't resolve kest.config.js")
+const userConfig = require(cwd + "/kest.config.js");
+if (!userConfig) throw new Error("cann't resolve kest.config.js");
 
 // alias
 const alias: any = {};
@@ -33,21 +33,26 @@ const htmlWebpackOptions = {
   filename: "app.html",
 };
 
-/**获取本机IP */
+// 获取本机IP
 function getIPAdress() {
-  let interfaces = require('os').networkInterfaces();
-  for (var devName in interfaces) {
-    var iface = interfaces[devName];
-    for (var i = 0; i < iface.length; i++) {
-      let alias = iface[i];
-      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-        return alias.address
+  const interfaces = require("os").networkInterfaces();
+  for (const devName in interfaces) {
+    if (Object.hasOwnProperty(devName)) {
+      const iface = interfaces[devName];
+      for (const aliasIface of iface) {
+        if (
+          aliasIface.family === "IPv4" &&
+          aliasIface.address !== "127.0.0.1" &&
+          !aliasIface.internal
+        ) {
+          return aliasIface.address;
+        }
       }
     }
   }
 }
 
-const ip = getIPAdress()
+const ip = getIPAdress();
 
 const app = [resolve(cwd, "src/client/index.js")];
 if (devMode)
@@ -64,7 +69,7 @@ export const config: webpack.Configuration = {
   output: {
     path: resolve(cwd, "dist/assets"),
     filename: `${devMode ? "[name].bundle" : "[name].[hash:8]"}.js`,
-    publicPath: devMode ? "/" : (user_config.cdnPath ?? '/'),
+    publicPath: devMode ? "/" : userConfig.cdnPath ?? "/",
   },
   resolve: {
     alias,

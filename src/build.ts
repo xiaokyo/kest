@@ -11,7 +11,6 @@ import { config as dllWebpackConfig } from "./webpack/dll";
 
 const cwd = process.cwd();
 
-
 const compilerPromise = (compiler: webpack.Compiler) => {
   return new Promise((resolve, reject) => {
     compiler.hooks.done.tap("MyPlugin", (stats: webpack.Stats) => {
@@ -45,12 +44,14 @@ export const start = async () => {
     success("Dll build");
   }
 
-  clientCompiler.run((err, stats) => { // Stats Object
-    if (err) throw new Error(err.message)
+  clientCompiler.run((err, stats) => {
+    // Stats Object
+    if (err) throw new Error(err.message);
   });
 
-  serverCompiler.run((err, stats) => { // Stats Object
-    if (err) throw new Error(err.message)
+  serverCompiler.run((err, stats) => {
+    // Stats Object
+    if (err) throw new Error(err.message);
   });
 
   await compilerPromise(serverCompiler).catch((err) => logError(err));
