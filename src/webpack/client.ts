@@ -33,31 +33,10 @@ const htmlWebpackOptions = {
   filename: "app.html",
 };
 
-// 获取本机IP
-function getIPAdress() {
-  const interfaces = require("os").networkInterfaces();
-  for (const devName in interfaces) {
-    if (Object.hasOwnProperty(devName)) {
-      const iface = interfaces[devName];
-      for (const aliasIface of iface) {
-        if (
-          aliasIface.family === "IPv4" &&
-          aliasIface.address !== "127.0.0.1" &&
-          !aliasIface.internal
-        ) {
-          return aliasIface.address;
-        }
-      }
-    }
-  }
-}
-
-const ip = getIPAdress();
-
 const app = [resolve(cwd, "src/client/index.js")];
 if (devMode)
   app.unshift(
-    `webpack-hot-middleware/client?path=http://${ip}:8079/__hot_update&timeout=2000&overlay=false&reload=true`
+    `webpack-hot-middleware/client?path=http://localhost:8079/__hot_update&timeout=2000&overlay=false&reload=true`
   );
 
 export const config: webpack.Configuration = {
