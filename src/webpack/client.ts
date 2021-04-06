@@ -1,6 +1,5 @@
 import babelOptions from "../babel.config";
 import common from "./common";
-import { resolve } from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
@@ -9,13 +8,12 @@ import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import AddAssetHtmlWebpackPlugin from "add-asset-html-webpack-plugin";
+import { resolvePath } from "../config/paths";
 
 const devMode = process.env.NODE_ENV === "development" ? true : false;
 
-const cwd = process.cwd() || ".";
-
 // 自定义配置
-const userConfig = require(cwd + "/kest.config.js");
+const userConfig = require(resolvePath('/kest.config.js'));
 if (!userConfig) throw new Error("cann't resolve kest.config.js");
 
 // alias
@@ -23,7 +21,7 @@ const alias: any = {};
 // tslint:disable-next-line: forin
 for (const key of Object.keys(common.alias)) {
   if (common.alias.hasOwnProperty(key)) {
-    alias[key] = resolve(cwd, common.alias[key]);
+    alias[key] = resolvePath(common.alias[key]);
   }
 }
 
@@ -33,7 +31,7 @@ const htmlWebpackOptions = {
   filename: "app.html",
 };
 
-const app = [resolve(cwd, "src/client/index.js")];
+const app = [resolvePath("src/client/index.js")];
 if (devMode)
   app.unshift(
     `webpack-hot-middleware/client?path=http://localhost:8079/__hot_update&timeout=2000&overlay=false&reload=true`
@@ -46,7 +44,7 @@ export const config: webpack.Configuration = {
     app,
   },
   output: {
-    path: resolve(cwd, "dist/assets"),
+    path: resolvePath("dist/assets"),
     filename: `${devMode ? "[name].bundle" : "[name].[hash:8]"}.js`,
     publicPath: devMode ? "/" : userConfig.cdnPath ?? "/",
   },
@@ -157,13 +155,13 @@ export const config: webpack.Configuration = {
     }),
     new HtmlWebpackPlugin({
       ...htmlWebpackOptions,
-      template: resolve(cwd, "public/index.kade"),
+      template: resolvePath("public/index.kade"),
     }),
     new AddAssetHtmlWebpackPlugin({
-      filepath: resolve(cwd, "dist/dll/vendor.dll.js"), // 对应的 dll 文件路径
+      filepath: resolvePath("dist/dll/vendor.dll.js"), // 对应的 dll 文件路径
     }),
     new webpack.DllReferencePlugin({
-      manifest: resolve(cwd, "dist/dll/vendor-manifest.json"), // dll文件引入
+      manifest: resolvePath("dist/dll/vendor-manifest.json"), // dll文件引入
       context: __dirname,
     }),
     new CleanWebpackPlugin(),
